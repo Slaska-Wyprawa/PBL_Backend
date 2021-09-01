@@ -14,7 +14,6 @@ class Dftype(Base):
 class Dstype(Base):
     __tablename__ = 'dstypes'
 
-
     DSTId = Column(Integer, primary_key=True, unique=True)
     DSTDesc = Column(TINYTEXT, nullable=False)
 

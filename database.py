@@ -9,7 +9,7 @@ PORT = os.getenv('DATABASE_PORT')
 NAME = os.getenv('DATABASE_NAME')
 
 #database_connenct_URL = F'mysql://{USER}:{PASSWORD}@157.158.40.129:3306/pblapk_live'
-database_connenct_URL = 'mysql://APK:Cpia9qOehPC]-Y!r@157.158.40.129:3306/pblapk_live'
+database_connenct_URL = 'mysql://APK:Cpia9qOehPC]-Y!r@157.158.40.129:3306/pblapk_live?charset=utf8'
 #database_connenct_URL = os.getenv('CONNECT_STRING')
 
 print(database_connenct_URL)
@@ -19,5 +19,5 @@ engine = create_engine(database_connenct_URL)
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
 
 Base = declarative_base()
-metadata = Base.metadat
+metadata = Base.metadata
 
