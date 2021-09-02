@@ -1,6 +1,4 @@
-import databases, sqlalchemy
 from fastapi import FastAPI, Depends, status, Response, HTTPException
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 import schemas
 import models
