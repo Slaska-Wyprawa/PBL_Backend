@@ -19,3 +19,10 @@ class PlaceSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+class DisabilitiesSchema(BaseModel):
+    ObjectId: int
+    DiscountList: List[str]
+
+    class Config:
+        orm_mode = True
