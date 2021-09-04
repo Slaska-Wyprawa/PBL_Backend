@@ -1,51 +1,44 @@
-from sqlalchemy import Column, Float, ForeignKey, Integer, Text
-from sqlalchemy.dialects.mysql import TINYINT, TINYTEXT
-from sqlalchemy.orm import relationship
-from database import Base
+from typing import Optional, List
+from sqlmodel import Field, Session, SQLModel, create_engine, select, Relationship
 
 
-class Dftype(Base):
-    __tablename__ = 'dftypes'
-
-    DFTId = Column(Integer, primary_key=True, unique=True)
-    DFTDesc = Column(Text, nullable=False)
+class Dftypes(SQLModel, table=True):
+    DFTId: Optional[int] = Field(default=None, primary_key=True)
+    DFTDesc: str
 
 
-class Dstype(Base):
-    __tablename__ = 'dstypes'
-
-    DSTId = Column(Integer, primary_key=True, unique=True)
-    DSTDesc = Column(TINYTEXT, nullable=False)
+class Dstypes(SQLModel, table=True):
+    DSTId: Optional[int] = Field(default=None, primary_key=True)
+    DSTDesc: str
 
 
-class Object(Base):
-    __tablename__ = 'objects'
-
-    ObjectId = Column(Integer, primary_key=True, unique=True)
-    Name = Column(TINYTEXT, nullable=False)
-    Description = Column(Text)
-    EasyAcces = Column(TINYINT(1))
-    FreeEntry = Column(TINYINT(1))
-    ImagePath = Column(Text)
-    FreeParking = Column(TINYINT(1))
-    GMapLink = Column(Text)
-    OPMapLink = Column(Text)
-    Longitude = Column(Float)
-    Latitude = Column(Float)
+class Objects(SQLModel, table=True):
+    ObjectId: Optional[int] = Field(default=None, primary_key=True)
+    Name: str
+    Description: str
+    EasyAcces: bool
+    FreeEntry: bool
+    ImagePath: str
+    FreeParking: Optional[bool] = None
+    GMapLink: str
+    OPMapLink: Optional[str] = None
+    Longitude: float
+    Latitude: float
 
 
-class Disabledfacility(Base):
+class Disabledfacility(SQLModel, table=True):
     __tablename__ = 'disabledfacilities'
 
-    DFId = Column(Integer, primary_key=True, unique=True)
-    DFObjectId = Column(ForeignKey('objects.ObjectId', ondelete='CASCADE'), nullable=False, index=True)
-    DFType = Column(ForeignKey('dftypes.DFTId', ondelete='CASCADE'), nullable=False, index=True)
+    DFId: Optional[int] = Field(default=None, primary_key=True)
+    DFObjectId: int = Field(default=None, foreign_key="objects.ObjectId")
+    DFType: int = Field(foreign_key='dftypes.DFTId')
 
-    object = relationship('Object')
-    dftype = relationship('Dftype')
+    object:List[Objects] = Relationship(Objects)A
+    dftype: List[Dftypes] = Relationship( Dftypes)
 
 
-class Discount(Base):
+'''
+class Discount(SQLModel):
     __tablename__ = 'discounts'
 
     DSId = Column(Integer, primary_key=True, unique=True)
@@ -54,3 +47,4 @@ class Discount(Base):
 
     dstype = relationship('Dstype')
     object = relationship('Object')
+'''
