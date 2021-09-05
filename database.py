@@ -1,7 +1,8 @@
 from functools import lru_cache
 import os
 from config.config import Settings
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from sqlmodel import create_engine
+
 USER = os.getenv('DATABASE_USERNAME')
 PASSWORD = os.getenv('DATABASE_PASSWORD')
 ADDRESS = os.getenv('DATABASE_ADDRESS')
@@ -17,10 +18,4 @@ def get_settings():
 settings: Settings = get_settings()
 database_connection_url = settings.database_connection_url
 
-
-engine = create_engine(database_connection_url,echo=True)
-
-
-
-
-
+engine = create_engine(database_connection_url, echo=True)

@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlmodel import Field, Relationship, Session, SQLModel, create_engine
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class DisabilitiesSchema(SQLModel):
@@ -36,7 +36,6 @@ class Dftype(SQLModel, table=True):
     DFTDesc: str
 
     objects_link: List[Disabledfacilitie] = Relationship(back_populates="dftype")
-    # objects: List["Objects"] = Relationship(back_populates='dftype', link_model=Disabledfacilities)
 
 
 class Dstype(SQLModel, table=True):
@@ -47,8 +46,6 @@ class Dstype(SQLModel, table=True):
 
     objects_link: List[Discount] = Relationship(back_populates="dstype")
 
-
-# object: List["Objects"] = Relationship(back_populates='dstype', link_model=Discounts)
 
 class BaseObject(SQLModel):
     ObjectId: Optional[int] = Field(default=None, primary_key=True)
@@ -70,5 +67,3 @@ class Object(BaseObject, table=True):
 
     dftypes_link: List[Disabledfacilitie] = Relationship(back_populates="object")
     dstypes_link: List[Discount] = Relationship(back_populates="object")
-    # dftype: List[Dftypes] = Relationship(back_populates='objects', link_model=Disabledfacilities)
-    # dstype: List[Dstypes] = Relationship(back_populates='object', link_model=Discounts)

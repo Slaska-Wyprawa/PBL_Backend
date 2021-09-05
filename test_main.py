@@ -4,6 +4,7 @@ from main import app
 
 client = TestClient(app)
 
+
 def test_get_two_places_info():
     response = client.get("/place/?offset=0&limit=2")
     assert response.status_code == 200
@@ -64,8 +65,3 @@ def test_get_discount():
             "Emerycka"
         ]
     }
-
-
-
-
-

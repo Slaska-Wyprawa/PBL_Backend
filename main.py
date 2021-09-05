@@ -1,9 +1,9 @@
-from fastapi import FastAPI, Depends, status, Response, HTTPException, Query
-import schemas
+from fastapi import FastAPI, status, HTTPException, Query
+
 from database import engine
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from sqlmodel import Session, select
 import models
-from typing import List, Optional
+from typing import List
 
 app = FastAPI()
 
@@ -22,15 +22,15 @@ def get_all_places(offset: int = 0, limit: int = Query(default=30, lte=100)):
     return places
 
 
-@app.get("/place/{id}", response_model=models.Object)
-def get_one_place(id: int):
+@app.get("/place/{place_id}", response_model=models.Object)
+def get_one_place(place_id: int):
     try:
         with Session(engine) as session:
-            place = session.exec(select(models.Object).where(models.Object.ObjectId == id)).first()
+            place = session.exec(select(models.Object).where(models.Object.ObjectId == place_id)).first()
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     if not place:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'place with id {id} is not avilable')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'place with id {place_id} is not available')
     return place
 
 
@@ -50,5 +50,3 @@ def get_one_place(place_id: int):
     if not discounts:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'no discounts for place with id {place_id}')
     return discounts_list
-
-
