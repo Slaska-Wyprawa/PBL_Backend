@@ -1,9 +1,7 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 from functools import lru_cache
 import os
 from config.config import Settings
+from sqlmodel import create_engine
 
 USER = os.getenv('DATABASE_USERNAME')
 PASSWORD = os.getenv('DATABASE_PASSWORD')
@@ -20,9 +18,4 @@ def get_settings():
 settings: Settings = get_settings()
 database_connection_url = settings.database_connection_url
 
-engine = create_engine(database_connection_url)
-
-SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False)
-
-Base = declarative_base()
-metadata = Base.metadata
+engine = create_engine(database_connection_url, echo=True)

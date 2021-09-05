@@ -1,34 +1,52 @@
-from fastapi import FastAPI, Depends, status, Response, HTTPException
-from sqlalchemy.orm import Session
-import schemas
+from fastapi import FastAPI, status, HTTPException, Query
+
+from database import engine
+from sqlmodel import Session, select
 import models
-from database import SessionLocal
+from typing import List
 
 app = FastAPI()
 
 
-def get_db():
-    db = SessionLocal()
+@app.get("/place", response_model=List[models.BaseObject])
+def get_all_places(offset: int = 0, limit: int = Query(default=30, lte=100)):
     try:
-        yield db
-    finally:
-        db.close()
-
-
-@app.get("/places")
-def get_all_places(db: Session = Depends(get_db)):
-    try:
-        places = db.query(models.Object).all()
+        with Session(engine) as session:
+            places = session.exec(
+                select(models.Object.ObjectId, models.Object.Name, models.Object.Longitude, models.Object.Latitude,
+                       models.Object.Description, models.Object.ImagePath).offset(offset).limit(limit)).all()
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=str(e))
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     if not places:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="no places were found")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     return places
 
 
-@app.get("/places/{id}", response_model=schemas.PlaceSchema)
-def get_one_place(id: int, response: Response, db: Session = Depends(get_db)):
-    place = db.query(models.Object).filter(models.Object.ObjectId == id).first()
+@app.get("/place/{place_id}", response_model=models.Object)
+def get_one_place(place_id: int):
+    try:
+        with Session(engine) as session:
+            place = session.exec(select(models.Object).where(models.Object.ObjectId == place_id)).first()
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     if not place:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'place with id {id} is not avilable')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'place with id {place_id} is not available')
     return place
+
+
+@app.get("/discount/{place_id}", response_model=models.DisabilitiesSchema)
+def get_one_place(place_id: int):
+    try:
+        with Session(engine) as session:
+            discounts = session.exec(
+                select(models.Object.ObjectId, models.Dstype.DSTDesc).select_from(models.Object).join(
+                    models.Discount).join(models.Dstype).where(models.Discount.ObjectId == place_id)).all()
+            discounts_list = {
+                'ObjectId': place_id,
+                'DiscountList': [discounts[x][1] for x in range(len(discounts))]
+            }
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    if not discounts:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'no discounts for place with id {place_id}')
+    return discounts_list

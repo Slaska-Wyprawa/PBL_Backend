@@ -1,56 +1,69 @@
-from sqlalchemy import Column, Float, ForeignKey, Integer, Text
-from sqlalchemy.dialects.mysql import TINYINT, TINYTEXT
-from sqlalchemy.orm import relationship
-from database import Base
+from typing import List, Optional
+
+from sqlmodel import Field, Relationship, SQLModel
 
 
-class Dftype(Base):
-    __tablename__ = 'dftypes'
-
-    DFTId = Column(Integer, primary_key=True, unique=True)
-    DFTDesc = Column(Text, nullable=False)
+class DisabilitiesSchema(SQLModel):
+    ObjectId: int
+    DiscountList: List[str]
 
 
-class Dstype(Base):
-    __tablename__ = 'dstypes'
-
-    DSTId = Column(Integer, primary_key=True, unique=True)
-    DSTDesc = Column(TINYTEXT, nullable=False)
-
-
-class Object(Base):
-    __tablename__ = 'objects'
-
-    ObjectId = Column(Integer, primary_key=True, unique=True)
-    Name = Column(TINYTEXT, nullable=False)
-    Description = Column(Text)
-    EasyAcces = Column(TINYINT(1))
-    FreeEntry = Column(TINYINT(1))
-    ImagePath = Column(Text)
-    FreeParking = Column(TINYINT(1))
-    GMapLink = Column(Text)
-    OPMapLink = Column(Text)
-    Longitude = Column(Float)
-    Latitude = Column(Float)
-
-
-class Disabledfacility(Base):
+class Disabledfacilitie(SQLModel, table=True):
     __tablename__ = 'disabledfacilities'
 
-    DFId = Column(Integer, primary_key=True, unique=True)
-    DFObjectId = Column(ForeignKey('objects.ObjectId', ondelete='CASCADE'), nullable=False, index=True)
-    DFType = Column(ForeignKey('dftypes.DFTId', ondelete='CASCADE'), nullable=False, index=True)
+    DFId: Optional[int] = Field(default=None, primary_key=True)
+    DFObjectId: int = Field(default=None, foreign_key="objects.ObjectId")
+    DFType: int = Field(default=None, foreign_key="dftypes.DFTId")
+    object: "Object" = Relationship(back_populates="dftypes_link")
+    dftype: "Dftype" = Relationship(back_populates="objects_link")
 
-    object = relationship('Object')
-    dftype = relationship('Dftype')
 
-
-class Discount(Base):
+class Discount(SQLModel, table=True):
     __tablename__ = 'discounts'
 
-    DSId = Column(Integer, primary_key=True, unique=True)
-    ObjectId = Column(ForeignKey('objects.ObjectId', ondelete='CASCADE'), nullable=False, index=True)
-    DSType = Column(ForeignKey('dstypes.DSTId', ondelete='CASCADE'), nullable=False, index=True)
+    DSId: Optional[int] = Field(default=None, primary_key=True)
+    ObjectId: int = Field(default=None, foreign_key="objects.ObjectId")
+    DSType: int = Field(default=None, foreign_key="dstypes.DSTId")
 
-    dstype = relationship('Dstype')
-    object = relationship('Object')
+    object: "Object" = Relationship(back_populates="dstypes_link")
+    dstype: "Dstype" = Relationship(back_populates="objects_link")
+
+
+class Dftype(SQLModel, table=True):
+    __tablename__ = 'dftypes'
+
+    DFTId: int = Field(default=None, primary_key=True)
+    DFTDesc: str
+
+    objects_link: List[Disabledfacilitie] = Relationship(back_populates="dftype")
+
+
+class Dstype(SQLModel, table=True):
+    __tablename__ = 'dstypes'
+
+    DSTId: Optional[int] = Field(default=None, primary_key=True)
+    DSTDesc: str
+
+    objects_link: List[Discount] = Relationship(back_populates="dstype")
+
+
+class BaseObject(SQLModel):
+    ObjectId: Optional[int] = Field(default=None, primary_key=True)
+    Name: str
+    Description: str
+    ImagePath: str
+    Longitude: float
+    Latitude: float
+
+
+class Object(BaseObject, table=True):
+    __tablename__ = 'objects'
+
+    EasyAcces: bool
+    FreeEntry: bool
+    FreeParking: Optional[bool] = None
+    GMapLink: str
+    OPMapLink: Optional[str] = None
+
+    dftypes_link: List[Disabledfacilitie] = Relationship(back_populates="object")
+    dstypes_link: List[Discount] = Relationship(back_populates="object")
