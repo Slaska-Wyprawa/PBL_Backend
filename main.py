@@ -4,8 +4,6 @@ from database import engine
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 import models
 from typing import List, Optional
-from database import SessionLocal
-from typing import List, Optional
 
 app = FastAPI()
 
