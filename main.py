@@ -8,7 +8,7 @@ from typing import List, Optional
 app = FastAPI()
 
 
-@app.get("/places", response_model=List[models.BaseObject])
+@app.get("/place", response_model=List[models.BaseObject])
 def get_all_places(offset: int = 0, limit: int = Query(default=30, lte=100)):
     try:
         with Session(engine) as session:
@@ -22,7 +22,7 @@ def get_all_places(offset: int = 0, limit: int = Query(default=30, lte=100)):
     return places
 
 
-@app.get("/places/{id}", response_model=models.Object)
+@app.get("/place/{id}", response_model=models.Object)
 def get_one_place(id: int):
     try:
         with Session(engine) as session:
