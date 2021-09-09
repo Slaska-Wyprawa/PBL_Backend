@@ -1,13 +1,8 @@
 from functools import lru_cache
-import os
-from config.config import Settings
+
 from sqlmodel import create_engine
 
-USER = os.getenv('DATABASE_USERNAME')
-PASSWORD = os.getenv('DATABASE_PASSWORD')
-ADDRESS = os.getenv('DATABASE_ADDRESS')
-PORT = os.getenv('DATABASE_PORT')
-NAME = os.getenv('DATABASE_NAME')
+from config.config import Settings
 
 
 @lru_cache()

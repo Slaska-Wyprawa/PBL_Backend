@@ -5,6 +5,11 @@ from sqlmodel import Field, Relationship, SQLModel
 
 class DisabilitiesSchema(SQLModel):
     ObjectId: int
+    DisabilitiesList: List[str]
+
+
+class DiscountSchema(SQLModel):
+    ObjectId: int
     DiscountList: List[str]
 
 
