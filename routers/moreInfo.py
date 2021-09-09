@@ -9,7 +9,7 @@ router = APIRouter(tags=['More informations'])
 
 
 @router.get("/discount/{place_id}", response_model=models.DiscountSchema)
-def get_discounts(place_id: int):
+async def get_discounts(place_id: int):
     try:
         with Session(engine) as session:
             discounts = session.exec(
@@ -27,7 +27,7 @@ def get_discounts(place_id: int):
 
 
 @router.get("/disabilities/{place_id}", response_model=models.DisabilitiesSchema)
-def get_disabilities(place_id: int):
+async def get_disabilities(place_id: int):
     try:
         with Session(engine) as session:
             disabilities = session.exec(

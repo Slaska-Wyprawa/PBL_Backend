@@ -12,7 +12,7 @@ router = APIRouter(prefix='/place',
 
 
 @router.get("/", response_model=List[models.BaseObject])
-def get_all_places(offset: int = 0, limit: int = Query(default=30, lte=100)):
+async def get_all_places(offset: int = 0, limit: int = Query(default=30, lte=100)):
     try:
         with Session(engine) as session:
             places = session.exec(
@@ -26,7 +26,7 @@ def get_all_places(offset: int = 0, limit: int = Query(default=30, lte=100)):
 
 
 @router.get("/{place_id}", response_model=models.Object)
-def get_one_place(place_id: int):
+async def get_one_place(place_id: int):
     try:
         with Session(engine) as session:
             place = session.exec(select(models.Object).where(models.Object.ObjectId == place_id)).first()
