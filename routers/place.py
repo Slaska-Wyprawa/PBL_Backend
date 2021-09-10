@@ -15,9 +15,7 @@ router = APIRouter(prefix='/place',
 async def get_all_places(offset: int = 0, limit: int = Query(default=30, lte=100)):
     try:
         with Session(engine) as session:
-            places = session.exec(
-                select(models.Object.ObjectId, models.Object.Name, models.Object.Longitude, models.Object.Latitude,
-                       models.Object.Description, models.Object.ImagePath).offset(offset).limit(limit)).all()
+            places = session.exec(select(models.Object).offset(offset).limit(limit)).all()
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
     if not places:
