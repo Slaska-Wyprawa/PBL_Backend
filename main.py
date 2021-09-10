@@ -1,52 +1,38 @@
-from fastapi import FastAPI, status, HTTPException, Query
+from fastapi import FastAPI
 
-from database import engine
-from sqlmodel import Session, select
-import models
-from typing import List
+from routers import place, moreInfo, osm
 
-app = FastAPI()
+description = """Świetne API stworzone przez jeszcze **świetniejszych** ludzi które zabierze cię w pododróż po Śląsku. Chociaż z całą aplikacją będzie łatwiej `<tu powinnien być link ale go nie ma>` 🚀 
+## Szybki Opis 
+Na ten moment API pozwala na pobranie danych o miejscach z naszej bazy dantch oraz z API open streets maps. 
+Mamy też endpoint `/directions/start={start}&stop={stop}` który wyznacza trasę<br/><br/>  
+Made by 🎓 Paweł Nalepka, Szymon Przepióra 
 
+"""
+tags_metadata = [
+    {
+        "name": "Place",
+        "description": "Pobieranie informacji i miejscach.",
+    },
+    {
+        "name": "More informations",
+        "description": "Pobieranie informacji o dodatkowych ułatwieniach i zniżkach.",
+    },
+    {
+        "name": "Open Street Maps",
+        "description": "Pobieranie informacji z OPS i nawigowanie.",
+    },
+]
 
-@app.get("/place", response_model=List[models.BaseObject])
-def get_all_places(offset: int = 0, limit: int = Query(default=30, lte=100)):
-    try:
-        with Session(engine) as session:
-            places = session.exec(
-                select(models.Object.ObjectId, models.Object.Name, models.Object.Longitude, models.Object.Latitude,
-                       models.Object.Description, models.Object.ImagePath).offset(offset).limit(limit)).all()
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-    if not places:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    return places
+app = FastAPI(title="Śląska Wyprawa",
+              description=description,
+              version="1.0",
+              contact={
+                  "name": "Śląska Wyprawa Team",
+                  "email": "nawelpalepka@gmail.com",
+                  "url": "https://www-arch.polsl.pl/"}
+              , openapi_tags=tags_metadata)
 
-
-@app.get("/place/{place_id}", response_model=models.Object)
-def get_one_place(place_id: int):
-    try:
-        with Session(engine) as session:
-            place = session.exec(select(models.Object).where(models.Object.ObjectId == place_id)).first()
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-    if not place:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'place with id {place_id} is not available')
-    return place
-
-
-@app.get("/discount/{place_id}", response_model=models.DisabilitiesSchema)
-def get_one_place(place_id: int):
-    try:
-        with Session(engine) as session:
-            discounts = session.exec(
-                select(models.Object.ObjectId, models.Dstype.DSTDesc).select_from(models.Object).join(
-                    models.Discount).join(models.Dstype).where(models.Discount.ObjectId == place_id)).all()
-            discounts_list = {
-                'ObjectId': place_id,
-                'DiscountList': [discounts[x][1] for x in range(len(discounts))]
-            }
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-    if not discounts:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'no discounts for place with id {place_id}')
-    return discounts_list
+app.include_router(place.router)
+app.include_router(moreInfo.router)
+app.include_router(osm.router)
