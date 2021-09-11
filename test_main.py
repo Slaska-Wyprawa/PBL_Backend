@@ -61,7 +61,16 @@ def test_get_place_info():
         "FreeParking": True,
         "OPMapLink": "421787802",
         "Name": "Sztolnia Królowa Luiza - Zabrze",
-        "Description": "Sztolnia Królowa Luiza to połączenie dwóch górniczych, historycznych obiektów: Głównej Kluczowej Sztolni Dziedzicznej (najdłuższy obiekty hydrotechniczny w europejskim górnictwie węglowym) oraz Kopalni Królowa Luiza Do atrakcji należą: podziemny park maszyn górniczych, zlokalizowany w dawnych wyrobiskach kopalni, trasa wodna oraz rozbudowana przestrzeń naziemna z tematycznymi parkami rozrywkowo-edukacyjnymi. Sztolnia Królowa Luiza jest częścią Muzeum Górnictwa Węglowego w Zabrzu.\r\nSztolnia jest wybitnym dziełem inżynierskim, które dokumentuje poziom rozwoju techniki w I poł. XIX w. w zakresie budownictwa podziemnego. Dzięki odpowiedniemu udostępnieniu można obecnie spływać łodziami na odcinku ok. 1100 m. W podziemnym porcie załadunkowym w pokładzie węgla 509 turyści mogą zobaczyć, w jaki sposób w przeszłości wykorzystywano Sztolnię do transportu węgla drogą wodną.\r\n",
+        "Description": "Sztolnia Królowa Luiza to połączenie dwóch górniczych, historycznych obiektów: Głównej "
+                       "Kluczowej Sztolni Dziedzicznej (najdłuższy obiekty hydrotechniczny w europejskim górnictwie "
+                       "węglowym) oraz Kopalni Królowa Luiza Do atrakcji należą: podziemny park maszyn górniczych, "
+                       "zlokalizowany w dawnych wyrobiskach kopalni, trasa wodna oraz rozbudowana przestrzeń naziemna "
+                       "z tematycznymi parkami rozrywkowo-edukacyjnymi. Sztolnia Królowa Luiza jest częścią Muzeum "
+                       "Górnictwa Węglowego w Zabrzu.\r\nSztolnia jest wybitnym dziełem inżynierskim, "
+                       "które dokumentuje poziom rozwoju techniki w I poł. XIX w. w zakresie budownictwa podziemnego. "
+                       "Dzięki odpowiedniemu udostępnieniu można obecnie spływać łodziami na odcinku ok. 1100 m. W "
+                       "podziemnym porcie załadunkowym w pokładzie węgla 509 turyści mogą zobaczyć, w jaki sposób w "
+                       "przeszłości wykorzystywano Sztolnię do transportu węgla drogą wodną.\r\n",
         "ImagePath": "http://podziemia.pl/wp-content/uploads/2017/07/IMG_5102-scaled.jpg",
         "Longitude": 18.8062,
         "Latitude": 50.2957,
