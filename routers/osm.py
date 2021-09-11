@@ -45,6 +45,20 @@ async def get_address(place_id):
         return place
 
 
+@router.get("/city/{place_id}")
+async def get_city(place_id):
+    with Session(engine) as session:
+        lat = session.exec(select(models.Object.Latitude).where(models.Object.ObjectId == place_id)).first()
+        if not lat:
+            raise HTTPException(status_code=404, detail="Latitude not found")
+        lon = session.exec(select(models.Object.Longitude).where(models.Object.ObjectId == place_id)).first()
+        if not lon:
+            raise HTTPException(status_code=404, detail="Latitude not found")
+        place = nominatim.query(lat, lon, reverse=True)
+        print(place)
+        return place._json[0]['address']
+
+
 @router.get("/directions/start={start}&stop={stop}")
 async def get_directions(response: Response, start, stop, settings: Settings = Depends(get_settings)):
     api_key = settings.open_route_api_key

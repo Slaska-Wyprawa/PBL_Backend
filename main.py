@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 from routers import place, moreInfo, osm
 
@@ -23,7 +24,12 @@ tags_metadata = [
         "description": "Pobieranie informacji z OPS i nawigowanie.",
     },
 ]
-
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
 app = FastAPI(title="Śląska Wyprawa",
               description=description,
               version="1.0",
@@ -32,7 +38,13 @@ app = FastAPI(title="Śląska Wyprawa",
                   "email": "nawelpalepka@gmail.com",
                   "url": "https://www-arch.polsl.pl/"}
               , openapi_tags=tags_metadata)
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(place.router)
 app.include_router(moreInfo.router)
 app.include_router(osm.router)
