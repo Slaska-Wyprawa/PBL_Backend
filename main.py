@@ -7,7 +7,7 @@ description = """Świetne API stworzone przez jeszcze **świetniejszych** ludzi 
 ## Szybki Opis 
 Na ten moment API pozwala na pobranie danych o miejscach z naszej bazy dantch oraz z API open streets maps. 
 Mamy też endpoint `/directions/start={start}&stop={stop}` który wyznacza trasę<br/><br/>  
-Made by 🎓 Paweł Nalepka, Szymon Przepióra 
+Made by 🎓 Paweł Nalepka, inż. Szymon Przepióra 
 
 """
 tags_metadata = [
