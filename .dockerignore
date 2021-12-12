@@ -1,0 +1,6 @@
+.git
+.github
+.Procfile
+.dockerignore
+Dockerfile
+README.md
