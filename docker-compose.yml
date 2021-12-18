@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+ website:
+  container_name: pbl
+  build: .
+  ports: 
+    - "8080:8080"
+  networks:
+      - fullstack
+  restart: on-failure
+networks:
+  fullstack:
+    driver: bridge
