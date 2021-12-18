@@ -1,4 +1,4 @@
-FROM python:3.8.6
+FROM python:latest
 COPY . /home/pbl
 WORKDIR /home/pbl
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
